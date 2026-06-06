@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:drift/drift.dart' show OrderingTerm;
+import 'package:drift/drift.dart' show OrderingTerm, Value;
 import '../database/database.dart';
 import '../providers/database_provider.dart';
 import '../widgets/app_icon.dart';
@@ -61,6 +61,49 @@ class _BindingCard extends ConsumerWidget {
     }
   }
 
+  Future<void> _editMemo(BuildContext context, WidgetRef ref) async {
+    final controller =
+        TextEditingController(text: binding.locationLabel ?? '');
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('メモを編集'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: '例：駅前のコンビニ',
+            filled: true,
+            fillColor: Colors.grey[100],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('キャンセル'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, controller.text),
+            child: const Text('保存'),
+          ),
+        ],
+      ),
+    );
+    if (result != null) {
+      final db = ref.read(databaseProvider);
+      await (db.update(db.appBindings)..where((t) => t.id.equals(binding.id)))
+          .write(AppBindingsCompanion(
+        locationLabel:
+            Value(result.trim().isEmpty ? null : result.trim()),
+      ));
+    }
+  }
+
   Future<void> _delete(BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -117,6 +160,11 @@ class _BindingCard extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined, color: Colors.grey),
+                  tooltip: 'メモを編集',
+                  onPressed: () => _editMemo(context, ref),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.red),

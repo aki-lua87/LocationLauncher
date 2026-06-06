@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../database/database.dart';
 import '../models/nearby_binding.dart';
 import 'database_provider.dart';
 import 'location_provider.dart';

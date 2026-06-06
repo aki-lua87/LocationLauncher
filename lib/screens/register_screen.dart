@@ -120,7 +120,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           try {
             await _registerApp(app, memo);
             if (ctx.mounted) Navigator.pop(ctx);
-            if (mounted) Navigator.pop(context);
+            if (context.mounted) Navigator.pop(context);
           } catch (e) {
             if (ctx.mounted) {
               ScaffoldMessenger.of(ctx).showSnackBar(
@@ -199,9 +199,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         setState(() => loading = true);
                         try {
                           await _registerUrl(_urlLabelController.text);
-                          if (mounted) Navigator.pop(context);
+                          if (context.mounted) Navigator.pop(context);
                         } catch (e) {
-                          if (mounted) {
+                          if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('登録に失敗しました: $e')),
                             );

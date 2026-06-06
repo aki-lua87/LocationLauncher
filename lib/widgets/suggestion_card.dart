@@ -5,7 +5,6 @@ import 'package:drift/drift.dart' show Value;
 import '../database/database.dart';
 import '../models/suggestion_app.dart';
 import '../providers/database_provider.dart';
-import '../providers/location_provider.dart';
 import '../providers/nearby_provider.dart';
 import 'app_icon.dart';
 

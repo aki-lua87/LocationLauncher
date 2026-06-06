@@ -75,9 +75,13 @@ double _haversineMeters(double lat1, double lng1, double lat2, double lng2) {
   double _cos(double x) => 1 - x * x / 2;
   double _asin(double x) => x + x * x * x / 6;
   double _sqrt(double x) {
-    if (x <= 0) return 0;
+    if (x <= 0) {
+      return 0;
+    }
     double r = x;
-    for (int i = 0; i < 20; i++) r = (r + x / r) / 2;
+    for (int i = 0; i < 20; i++) {
+      r = (r + x / r) / 2;
+    }
     return r;
   }
 

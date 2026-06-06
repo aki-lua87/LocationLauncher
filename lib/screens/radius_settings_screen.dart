@@ -39,7 +39,9 @@ class RadiusSettingsScreen extends ConsumerWidget {
                   color: Colors.white,
                   child: RadioListTile<double>(
                     value: opt.value,
+                    // ignore: deprecated_member_use
                     groupValue: currentRadius,
+                    // ignore: deprecated_member_use
                     onChanged: (v) {
                       if (v != null) {
                         ref

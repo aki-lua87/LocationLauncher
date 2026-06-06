@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/nearby_binding.dart';
 import '../providers/nearby_provider.dart';
 import '../providers/location_provider.dart';
 import '../providers/suggestions_provider.dart' show suggestionsProvider;
@@ -65,7 +64,10 @@ class HomeScreen extends ConsumerWidget {
               return RefreshIndicator(
                 onRefresh: () => ref.read(locationProvider.notifier).fetch(),
                 child: ListView(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(
+                    16, 16, 16,
+                    80 + MediaQuery.of(context).padding.bottom,
+                  ),
                   children: [
                     ...bindings.map((nearby) => AppCard(
                           nearby: nearby,
