@@ -1,0 +1,69 @@
+name: Android Release
+
+on:
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate source files
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Rename APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk point-launcher-${{ github.sha }}.apk
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: point-launcher-apk
+          path: point-launcher-${{ github.sha }}.apk
+          if-no-files-found: error
+
+      - name: Publish latest release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: android-${{ github.run_number }}
+          name: Android APK ${{ github.run_number }}
+          body: |
+            Automated APK build from `${{ github.ref_name }}`.
+
+            Commit: `${{ github.sha }}`
+          artifacts: point-launcher-${{ github.sha }}.apk
+          artifactContentType: application/vnd.android.package-archive
+          makeLatest: true
