@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const _channel = MethodChannel('com.example.point_launcher/apps');
+const _channel = MethodChannel('net.akakitune87.localaun/apps');
 
 final iconCacheProvider =
     StateNotifierProvider<IconCacheNotifier, Map<String, Uint8List?>>((ref) {

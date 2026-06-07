@@ -5,7 +5,7 @@ import 'screens/home_screen.dart';
 import 'screens/register_screen.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
-const _channel = MethodChannel('com.example.point_launcher/apps');
+const _channel = MethodChannel('net.akakitune87.localaun/apps');
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));

@@ -1,4 +1,4 @@
-package com.example.point_launcher
+package net.akakitune87.localaun
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.example.point_launcher/apps"
+    private val CHANNEL = "net.akakitune87.localaun/apps"
     private var pendingSharedUrl: String? = null
     private var methodChannel: MethodChannel? = null
 

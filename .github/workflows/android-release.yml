@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "**"
+    tags:
+      - "v*"
   workflow_dispatch:
 
 permissions:
@@ -42,6 +44,22 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Set up release signing
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/release-upload.jks
+          cat > android/key.properties <<EOF
+          storeFile=release-upload.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+
       - name: Build release APK
         run: flutter build apk --release
 
@@ -55,13 +73,14 @@ jobs:
           path: point-launcher-${{ github.sha }}.apk
           if-no-files-found: error
 
-      - name: Publish latest release
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: ncipollo/release-action@v1
         with:
-          tag: android-${{ github.run_number }}
-          name: Android APK ${{ github.run_number }}
+          tag: ${{ github.ref_name }}
+          name: Point Launcher ${{ github.ref_name }}
           body: |
-            Automated APK build from `${{ github.ref_name }}`.
+            Release build of `${{ github.ref_name }}`.
 
             Commit: `${{ github.sha }}`
           artifacts: point-launcher-${{ github.sha }}.apk
