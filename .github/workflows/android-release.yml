@@ -78,7 +78,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
-          name: Point Launcher ${{ github.ref_name }}
+          name: Location Launcher ${{ github.ref_name }}
           body: |
             Release build of `${{ github.ref_name }}`.
 
