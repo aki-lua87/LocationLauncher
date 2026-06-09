@@ -50,6 +50,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+        }
         release {
             // key.properties が無い場合は debug 鍵で署名し、`flutter run --release` を可能にする。
             // リリース用keystoreはCI上でのみ key.properties / release-upload.jks を生成して使用する。

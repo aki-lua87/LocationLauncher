@@ -96,10 +96,13 @@ class HomeScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const RegisterScreen()),
-        ),
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const RegisterScreen()),
+          );
+          ref.invalidate(nearbyBindingsProvider);
+        },
         icon: const Icon(Icons.add),
         label: const Text('登録'),
       ),
@@ -137,22 +140,31 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildEmpty(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.credit_card_off, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            '近くに登録されたアプリはありません',
-            style: TextStyle(color: Colors.grey[600], fontSize: 15),
+    return RefreshIndicator(
+      onRefresh: () => ref.read(locationProvider.notifier).fetch(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.credit_card_off, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(
+                  '近くに登録されたアプリはありません',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 15),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '右下の「登録」から追加してください',
+                  style: TextStyle(color: Colors.grey[400], fontSize: 13),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            '右下の「登録」から追加してください',
-            style: TextStyle(color: Colors.grey[400], fontSize: 13),
-          ),
-        ],
+        ),
       ),
     );
   }
